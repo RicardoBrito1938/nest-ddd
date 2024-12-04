@@ -11,7 +11,6 @@ export class CreateAccountController {
 		const name = "John Doe";
 		const email = "ßjohndoe@mail.com";
 		const password = "123456";
-
 		await this.prisma.user.create({
 			data: {
 				name,
