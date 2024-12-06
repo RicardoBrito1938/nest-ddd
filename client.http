@@ -33,3 +33,11 @@ Authorization: Bearer {{authToken}}
   "title": "How to create a new question?",
   "content": "I'm trying to create a new question, but I'm not able to do it. Can someone help me?"
 }
+
+###
+
+# @name create_question
+GET {{baseUrl}}/questions?page=1
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
