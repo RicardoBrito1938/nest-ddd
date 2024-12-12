@@ -2,7 +2,7 @@ import { InMemoryAnswersRepository } from "test/repositories/in-memory-answers-r
 
 import { CommentOnAnswerUseCase } from "@/domain/forum/application/use-cases/comment-on-answer";
 import { InMemoryAnswerCommentsRepository } from "test/repositories/in-memory-answer-comments-repository";
-import { makeAnswer } from "test/factories/make-annswer";
+import { makeAnswer } from "test/factories/make-answer";
 
 import { InMemoryAnswerAttachmentsRepository } from "test/repositories/in-memory-answer-attachment-repository";
 

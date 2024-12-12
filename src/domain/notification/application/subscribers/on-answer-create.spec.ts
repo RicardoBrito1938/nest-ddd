@@ -1,6 +1,6 @@
 import { InMemoryQuestionsRepository } from "test/repositories/in-memory-questions-repository";
 import { OnAnswerCreated } from "@/domain/notification/application/subscribers/on-answer-created";
-import { makeAnswer } from "test/factories/make-annswer";
+import { makeAnswer } from "test/factories/make-answer";
 import { InMemoryAnswerAttachmentsRepository } from "test/repositories/in-memory-answer-attachment-repository";
 
 import { InMemoryAnswersRepository } from "test/repositories/in-memory-answers-repository";

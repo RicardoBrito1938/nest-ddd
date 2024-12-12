@@ -12,7 +12,7 @@ import type { MockInstance } from "vitest";
 import { waitFor } from "test/utils/wait-for";
 import { OnQuestionBestAnswerChosen } from "@/domain/notification/application/subscribers/on-question-best-answer-chosen";
 import { InMemoryAnswerAttachmentsRepository } from "test/repositories/in-memory-answer-attachment-repository";
-import { makeAnswer } from "test/factories/make-annswer";
+import { makeAnswer } from "test/factories/make-answer";
 
 let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentsRepository;
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository;
