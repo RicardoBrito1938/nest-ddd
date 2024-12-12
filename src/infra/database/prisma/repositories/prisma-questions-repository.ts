@@ -28,8 +28,8 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
 			orderBy: {
 				createdAt: "desc",
 			},
-			skip: page,
-			take: (page - 1) * 20,
+			skip: (page - 1) * 20,
+			take: 20,
 		});
 
 		return questions.map(PrismaQuestionMapper.toDomain);
