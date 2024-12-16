@@ -1,8 +1,8 @@
+import { AggregateRoot } from "@/core/entities/aggregate-root";
 import type { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import type { Optional } from "@/core/types/optional";
-import { AnswerAttachmentList } from "./answer-attachment-list";
-import { AggregateRoot } from "@/core/entities/aggregate-root";
 import { AnswerCreatedEvent } from "../events/answer-created-event";
+import { AnswerAttachmentList } from "./answer-attachment-list";
 
 export interface AnswerProps {
 	questionId: UniqueEntityId;
@@ -10,7 +10,7 @@ export interface AnswerProps {
 	attachments: AnswerAttachmentList;
 	content: string;
 	createdAt: Date;
-	updatedAt?: Date;
+	updatedAt?: Date | null;
 }
 
 export class Answer extends AggregateRoot<AnswerProps> {
@@ -34,7 +34,7 @@ export class Answer extends AggregateRoot<AnswerProps> {
 		return this.props.createdAt;
 	}
 
-	get updatedAt(): Date | undefined {
+	get updatedAt(): Date | undefined | null {
 		return this.props.updatedAt;
 	}
 
