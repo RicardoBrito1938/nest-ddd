@@ -1,11 +1,17 @@
-import { Body, Controller, Post, UseGuards } from "@nestjs/common";
-import { AuthGuard } from "@nestjs/passport";
+import { CreateQuestionUseCase } from "@/domain/forum/application/use-cases/create-question";
 import { CurrentUser } from "@/infra/auth/current-user-decorator";
 import { JwtAuthGuard } from "@/infra/auth/jwt-auth.guard";
 import { TokenPayload } from "@/infra/auth/jwt.strategy";
 import { ZodValidationPipe } from "@/infra/http/pipes/zod-validation-pipe";
+import {
+	BadRequestException,
+	Body,
+	Controller,
+	Post,
+	UseGuards,
+} from "@nestjs/common";
+import { AuthGuard } from "@nestjs/passport";
 import { z } from "zod";
-import { CreateQuestionUseCase } from "@/domain/forum/application/use-cases/create-question";
 
 const createQuestionBodySchema = z.object({
 	title: z.string(),
@@ -29,11 +35,15 @@ export class CreateQuestionController {
 		const { content, title } = body;
 		const { sub: userId } = user;
 
-		await this.createQuestion.execute({
+		const result = await this.createQuestion.execute({
 			authorId: userId,
 			content,
 			title,
 			attachmentsIds: [],
 		});
+
+		if (result.isLeft()) {
+			throw new BadRequestException();
+		}
 	}
 }

@@ -1,6 +1,17 @@
+import { StudentAlreadyExistsError } from "@/domain/forum/application/use-cases/errors/student-already-exists-error";
+import { WrongCredentialsError } from "@/domain/forum/application/use-cases/errors/wrong-credentials-error";
 import { CreateStudentUseCase } from "@/domain/forum/application/use-cases/register-student";
 import { ZodValidationPipe } from "@/infra/http/pipes/zod-validation-pipe";
-import { Body, Controller, HttpCode, Post, UsePipes } from "@nestjs/common";
+import {
+	BadRequestException,
+	Body,
+	ConflictException,
+	Controller,
+	HttpCode,
+	Post,
+	UnauthorizedException,
+	UsePipes,
+} from "@nestjs/common";
 import { z } from "zod";
 
 const createAccountBodySchema = z.object({
@@ -15,6 +26,10 @@ type CreateAccountBodySchemaType = z.infer<typeof createAccountBodySchema>;
 export class CreateAccountController {
 	constructor(private createStudentUseCase: CreateStudentUseCase) {}
 
+	private errorMap = {
+		[StudentAlreadyExistsError.name]: ConflictException,
+	};
+
 	@Post()
 	@HttpCode(201)
 	@UsePipes(new ZodValidationPipe(createAccountBodySchema))
@@ -28,7 +43,10 @@ export class CreateAccountController {
 		});
 
 		if (result.isLeft()) {
-			throw new Error();
+			const error = result.value;
+			const Exception =
+				this.errorMap[error.constructor.name] || BadRequestException;
+			throw new Exception(error.message);
 		}
 	}
 }

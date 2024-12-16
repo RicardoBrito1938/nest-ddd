@@ -1,6 +1,16 @@
 import { AuthenticateStudentUseCase } from "@/domain/forum/application/use-cases/authenticate-student";
+import { StudentAlreadyExistsError } from "@/domain/forum/application/use-cases/errors/student-already-exists-error";
+import { WrongCredentialsError } from "@/domain/forum/application/use-cases/errors/wrong-credentials-error";
 import { ZodValidationPipe } from "@/infra/http/pipes/zod-validation-pipe";
-import { Body, Controller, HttpCode, Post, UsePipes } from "@nestjs/common";
+import {
+	BadRequestException,
+	Body,
+	Controller,
+	HttpCode,
+	Post,
+	UnauthorizedException,
+	UsePipes,
+} from "@nestjs/common";
 import { z } from "zod";
 
 const authenticateBodySchema = z.object({
@@ -14,6 +24,10 @@ type AuthenticateBodySchemaType = z.infer<typeof authenticateBodySchema>;
 export class AuthenticateController {
 	constructor(private authenticateStudent: AuthenticateStudentUseCase) {}
 
+	private errorMap = {
+		[WrongCredentialsError.name]: UnauthorizedException,
+	};
+
 	@Post()
 	@HttpCode(201)
 	@UsePipes(new ZodValidationPipe(authenticateBodySchema))
@@ -26,7 +40,10 @@ export class AuthenticateController {
 		});
 
 		if (result.isLeft()) {
-			throw new Error();
+			const error = result.value;
+			const Exception =
+				this.errorMap[error.constructor.name] || BadRequestException;
+			throw new Exception(error.message);
 		}
 
 		const { accessToken } = result.value;
