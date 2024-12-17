@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -20,8 +14,8 @@ enum UserRole {
 
 model User {
   id       String   @id @default(uuid())
-  email    String   @unique
   name     String
+  email    String   @unique
   password String
   role     UserRole @default(STUDENT)
 
@@ -61,7 +55,7 @@ model Answer {
 
   author       User         @relation(fields: [authorId], references: [id])
   bestAnswerOn Question?    @relation("bestAnswer")
-  question     Question?    @relation(fields: [questionId], references: [id])
+  question     Question     @relation(fields: [questionId], references: [id])
   comments     Comment[]
   attachments  Attachment[]
 
@@ -71,15 +65,15 @@ model Answer {
 model Comment {
   id         String    @id @default(uuid())
   content    String
-  createdAt  DateTime  @default(now()) @map("created_at")
-  updatedAt  DateTime? @updatedAt @map("updated_at")
   authorId   String    @map("author_id")
   questionId String?   @map("question_id")
   answerId   String?   @map("answer_id")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime? @updatedAt @map("updated_at")
 
-  author   User      @relation(fields: [authorId], references: [id])
   question Question? @relation(fields: [questionId], references: [id])
   answer   Answer?   @relation(fields: [answerId], references: [id])
+  author   User      @relation(fields: [authorId], references: [id])
 
   @@map("comments")
 }

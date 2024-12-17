@@ -1,40 +1,35 @@
-import request from "supertest";
-import { Test } from "@nestjs/testing";
-import { INestApplication } from "@nestjs/common";
 import { AppModule } from "@/infra/app.module";
+import { DatabaseModule } from "@/infra/database/database.module";
 import { PrismaService } from "@/infra/database/prisma/prisma.service";
-import { hash } from "bcrypt";
+import { INestApplication } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
+import { Test } from "@nestjs/testing";
+import request from "supertest";
+import { StudentFactory } from "test/factories/make-student";
 
 describe("Create question (E2E)", () => {
 	let app: INestApplication;
 	let prisma: PrismaService;
 	let jwt: JwtService;
+	let studentFactory: StudentFactory;
 
 	beforeAll(async () => {
 		const moduleRef = await Test.createTestingModule({
-			imports: [AppModule],
+			imports: [AppModule, DatabaseModule],
+			providers: [StudentFactory],
 		}).compile();
 
 		app = moduleRef.createNestApplication();
 		prisma = moduleRef.get<PrismaService>(PrismaService);
 		jwt = moduleRef.get<JwtService>(JwtService);
+		studentFactory = moduleRef.get(StudentFactory);
 
 		await app.init();
 	});
 
 	test("[POST] /questions", async () => {
-		const newUser = {
-			name: "John doe",
-			email: "johndoe@mail.com",
-			password: await hash("password", 8),
-		};
-
-		const user = await prisma.user.create({
-			data: newUser,
-		});
-
-		const token = jwt.sign({ sub: user.id });
+		const user = await studentFactory.makePrismaStudent();
+		const token = jwt.sign({ sub: user.id.toString() });
 
 		const newQuestion = {
 			title: "What is the best way to learn programming?",

@@ -3,7 +3,6 @@ import {
 	Question,
 	type QuestionProps,
 } from "@/domain/forum/enterprise/entities/question";
-import { Slug } from "@/domain/forum/enterprise/entities/value-objects/slug";
 import { PrismaQuestionMapper } from "@/infra/database/prisma/mappers/prisma-question-mapper";
 import { PrismaService } from "@/infra/database/prisma/prisma.service";
 import { faker } from "@faker-js/faker";
@@ -17,7 +16,6 @@ export const makeQuestion = (
 		{
 			authorId: new UniqueEntityId("1"),
 			title: faker.lorem.sentence(),
-			slug: Slug.create("new-question"),
 			content: faker.lorem.text(),
 			...override,
 		},
