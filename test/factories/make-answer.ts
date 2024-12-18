@@ -3,7 +3,6 @@ import {
 	Answer,
 	type AnswerProps,
 } from "@/domain/forum/enterprise/entities/answer";
-import { Slug } from "@/domain/forum/enterprise/entities/value-objects/slug";
 import { PrismaAnswerMapper } from "@/infra/database/prisma/mappers/prisma-answer-mapper";
 import { PrismaService } from "@/infra/database/prisma/prisma.service";
 import { faker } from "@faker-js/faker";
