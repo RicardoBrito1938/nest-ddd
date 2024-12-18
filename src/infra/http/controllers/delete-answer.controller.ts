@@ -1,4 +1,4 @@
-import { DeleteQuestionUseCase } from "@/domain/forum/application/use-cases/delete-question";
+import { DeleteAnswerUseCase } from "@/domain/forum/application/use-cases/delete-answer";
 import { CurrentUser } from "@/infra/auth/current-user-decorator";
 import { TokenPayload } from "@/infra/auth/jwt.strategy";
 import {
@@ -11,19 +11,19 @@ import {
 } from "@nestjs/common";
 import { z } from "zod";
 
-@Controller("/questions/:id")
-export class DeleteQuestionController {
-	constructor(private deleteQuestion: DeleteQuestionUseCase) {}
+@Controller("/answers/:id")
+export class DeleteAnswerController {
+	constructor(private deleteAnswer: DeleteAnswerUseCase) {}
 	@Delete()
 	@HttpCode(204)
 	async handle(
 		@CurrentUser() user: TokenPayload,
-		@Param("id") questionId: string,
+		@Param("id") answerId: string,
 	) {
 		const userId = user.sub;
-		const result = await this.deleteQuestion.execute({
+		const result = await this.deleteAnswer.execute({
 			authorId: userId,
-			questionId,
+			answerId,
 		});
 
 		if (result.isLeft()) {
