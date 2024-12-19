@@ -43,7 +43,6 @@ describe("Comment on answer (E2E)", () => {
 			authorId: user.id,
 		});
 		const answerId = answer.id.toString();
-
 		const response = await request(app.getHttpServer())
 			.post(`/answers/${answerId}/comments`)
 			.set("Authorization", `Bearer ${accessToken}`)
@@ -53,11 +52,11 @@ describe("Comment on answer (E2E)", () => {
 
 		expect(response.statusCode).toBe(201);
 
-		// const commentOnDatabase = await prisma.comment.findFirst({
-		// 	where: {
-		// 		content: "New comment",
-		// 	},
-		// });
-		// expect(commentOnDatabase).toBeTruthy();
+		const commentOnDatabase = await prisma.comment.findFirst({
+			where: {
+				content: "New comment",
+			},
+		});
+		expect(commentOnDatabase).toBeTruthy();
 	});
 });

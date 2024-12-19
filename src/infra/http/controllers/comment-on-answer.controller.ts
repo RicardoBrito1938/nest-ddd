@@ -18,7 +18,6 @@ const commentOnAnswerBodySchema = z.object({
 const bodyValidationPipe = new ZodValidationPipe(commentOnAnswerBodySchema);
 
 type CommentOnAnswerBodySchema = z.infer<typeof commentOnAnswerBodySchema>;
-
 @Controller("/answers/:answerId/comments")
 export class CommentOnAnswerController {
 	constructor(private commentOnAnswer: CommentOnAnswerUseCase) {}
