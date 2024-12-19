@@ -43,10 +43,6 @@ import { PrismaStudentsRepository } from "./prisma/repositories/prisma-students-
 			provide: AnswerCommentsRepository,
 			useClass: PrismaAnswerCommentsRepository,
 		},
-		{
-			provide: AnswerAttachmentsRepository,
-			useClass: PrismaAnswerAttachmentRepository,
-		},
 	],
 	exports: [
 		PrismaService,
