@@ -39,12 +39,14 @@ describe("Delete question comment (E2E)", () => {
 		const question = await questionFactory.makePrismaQuestion({
 			authorId: user.id,
 		});
+
 		const questionComment =
 			await questionCommentFactory.makePrismaQuestionComment({
 				authorId: user.id,
 				questionId: question.id,
 			});
 		const questionCommentId = questionComment.id.toString();
+
 		const response = await request(app.getHttpServer())
 			.delete(`/questions/comments/${questionCommentId}`)
 			.set("Authorization", `Bearer ${accessToken}`);
