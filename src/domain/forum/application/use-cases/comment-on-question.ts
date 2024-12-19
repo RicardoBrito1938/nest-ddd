@@ -1,10 +1,10 @@
-import { left, right, type Either } from "./../../../../core/either";
-import { Question } from "@/domain/forum/enterprise/entities/question";
-import type { QuestionsRepository } from "../repositories/questions-repository";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
-import { QuestionComment } from "../../enterprise/entities/question-comment";
-import type { QuestionCommentsRepository } from "../repositories/question-comments-repository";
+import { Injectable } from "@nestjs/common";
 import { ResourceNotFoundError } from "../../../../core/errors/errors/resource-not-found-error";
+import { QuestionComment } from "../../enterprise/entities/question-comment";
+import { QuestionCommentsRepository } from "../repositories/question-comments-repository";
+import { QuestionsRepository } from "../repositories/questions-repository";
+import { type Either, left, right } from "./../../../../core/either";
 
 interface CommentOnQuestionUseCaseRequest {
 	authorId: string;
@@ -19,6 +19,7 @@ type CommentOnQuestionUseCaseResponse = Either<
 	}
 >;
 
+@Injectable()
 export class CommentOnQuestionUseCase {
 	constructor(
 		private questionsRepository: QuestionsRepository,
