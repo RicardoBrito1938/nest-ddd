@@ -27,32 +27,35 @@ import { PrismaStudentsRepository } from "./prisma/repositories/prisma-students-
 			useClass: PrismaStudentsRepository,
 		},
 		{
-			provide: AnswerAttachmentsRepository,
-			useClass: PrismaAnswerAttachmentRepository,
+			provide: QuestionCommentsRepository,
+			useClass: PrismaQuestionCommentsRepository,
 		},
 		{
 			provide: QuestionAttachmentsRepository,
 			useClass: PrismaQuestionAttachmentsRepository,
 		},
 		{
-			provide: QuestionCommentsRepository,
-			useClass: PrismaQuestionCommentsRepository,
+			provide: AnswersRepository,
+			useClass: PrismaAnswersRepository,
 		},
-		{ provide: AnswersRepository, useClass: PrismaAnswersRepository },
 		{
 			provide: AnswerCommentsRepository,
 			useClass: PrismaAnswerCommentsRepository,
+		},
+		{
+			provide: AnswerAttachmentsRepository,
+			useClass: PrismaAnswerAttachmentRepository,
 		},
 	],
 	exports: [
 		PrismaService,
 		QuestionsRepository,
 		StudentsRepository,
-		AnswerAttachmentsRepository,
-		QuestionAttachmentsRepository,
 		QuestionCommentsRepository,
+		QuestionAttachmentsRepository,
 		AnswersRepository,
 		AnswerCommentsRepository,
+		AnswerAttachmentsRepository,
 	],
 })
 export class DatabaseModule {}
