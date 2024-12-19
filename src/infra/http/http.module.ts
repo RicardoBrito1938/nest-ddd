@@ -6,7 +6,7 @@ import { DeleteAnswerUseCase } from "@/domain/forum/application/use-cases/delete
 import { DeleteQuestionUseCase } from "@/domain/forum/application/use-cases/delete-question";
 import { EditAnswerUseCase } from "@/domain/forum/application/use-cases/edit-answer";
 import { EditQuestionUseCase } from "@/domain/forum/application/use-cases/edit-question";
-import { FetchQuestionAnswersCase } from "@/domain/forum/application/use-cases/fetch-question-answers";
+import { FetchQuestionAnswersUseCase } from "@/domain/forum/application/use-cases/fetch-question-answers";
 import { FetchRecentQuestionsCase } from "@/domain/forum/application/use-cases/fetch-recent-questions";
 import { GetQuestionBySlugUseCase } from "@/domain/forum/application/use-cases/get-question-by-slug";
 import { CreateStudentUseCase } from "@/domain/forum/application/use-cases/register-student";
@@ -53,7 +53,7 @@ import { GetQuestionBySlugController } from "./controllers/get-question-by-slug.
 		AnswerQuestionUseCase,
 		EditAnswerUseCase,
 		DeleteAnswerUseCase,
-		FetchQuestionAnswersCase,
+		FetchQuestionAnswersUseCase,
 		CommentOnQuestionUseCase,
 	],
 })

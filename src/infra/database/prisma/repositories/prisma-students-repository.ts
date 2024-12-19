@@ -1,4 +1,3 @@
-import { PaginationParams } from "@/core/repositories/pagination-params";
 import { StudentsRepository } from "@/domain/forum/application/repositories/students-repository";
 import { Student } from "@/domain/forum/enterprise/entities/student";
 import { Injectable } from "@nestjs/common";

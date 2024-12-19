@@ -1,7 +1,7 @@
-import { InMemoryQuestionsRepository } from "test/repositories/in-memory-questions-repository";
-import { GetQuestionBySlugUseCase } from "./get-question-by-slug";
 import { makeQuestion } from "test/factories/make-question";
 import { InMemoryQuestionAttachmentsRepository } from "test/repositories/in-memory-question-attachments-repository";
+import { InMemoryQuestionsRepository } from "test/repositories/in-memory-questions-repository";
+import { GetQuestionBySlugUseCase } from "./get-question-by-slug";
 
 let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentsRepository;
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository;
@@ -23,7 +23,7 @@ describe("Get question by slug", () => {
 		await inMemoryQuestionsRepository.create(newQuestion);
 
 		const result = await sut.execute({
-			slug: "new-question",
+			slug: newQuestion.slug.value,
 		});
 
 		expect(result?.value?.question.id).toBeTruthy();
