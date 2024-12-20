@@ -9,9 +9,9 @@ import { DeleteQuestionUseCase } from "@/domain/forum/application/use-cases/dele
 import { DeleteQuestionCommentUseCase } from "@/domain/forum/application/use-cases/delete-question-comment";
 import { EditAnswerUseCase } from "@/domain/forum/application/use-cases/edit-answer";
 import { EditQuestionUseCase } from "@/domain/forum/application/use-cases/edit-question";
-import { FetchAnswerCommentsCase } from "@/domain/forum/application/use-cases/fetch-answer-comments";
+import { FetchAnswerCommentsUseCase } from "@/domain/forum/application/use-cases/fetch-answer-comments";
 import { FetchQuestionAnswersUseCase } from "@/domain/forum/application/use-cases/fetch-question-answers";
-import { FetchQuestionCommentsCase } from "@/domain/forum/application/use-cases/fetch-question-comments";
+import { FetchQuestionCommentsUseCase } from "@/domain/forum/application/use-cases/fetch-question-comments";
 import { FetchRecentQuestionsCase } from "@/domain/forum/application/use-cases/fetch-recent-questions";
 import { GetQuestionBySlugUseCase } from "@/domain/forum/application/use-cases/get-question-by-slug";
 import { CreateStudentUseCase } from "@/domain/forum/application/use-cases/register-student";
@@ -73,8 +73,8 @@ import { GetQuestionBySlugController } from "./controllers/get-question-by-slug.
 		DeleteQuestionCommentUseCase,
 		CommentOnAnswerUseCase,
 		DeleteAnswerCommentUseCase,
-		FetchQuestionCommentsCase,
-		FetchAnswerCommentsCase,
+		FetchQuestionCommentsUseCase,
+		FetchAnswerCommentsUseCase,
 	],
 })
 export class HttpModule {}

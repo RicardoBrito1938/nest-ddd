@@ -1,4 +1,4 @@
-import { FetchQuestionCommentsCase } from "@/domain/forum/application/use-cases/fetch-question-comments";
+import { FetchQuestionCommentsUseCase } from "@/domain/forum/application/use-cases/fetch-question-comments";
 import { ZodValidationPipe } from "@/infra/http/pipes/zod-validation-pipe";
 import {
 	BadRequestException,
@@ -21,7 +21,7 @@ type PageQueryParamSchema = z.infer<typeof pageQueryParamSchema>;
 
 @Controller("/questions/:questionId/comments")
 export class FetchQuestionCommentsController {
-	constructor(private fetchQuestionComments: FetchQuestionCommentsCase) {}
+	constructor(private fetchQuestionComments: FetchQuestionCommentsUseCase) {}
 	@Get()
 	async handle(
 		@Query("page", queryValidationPipe) page: PageQueryParamSchema,

@@ -1,15 +1,15 @@
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { makeAnswerComment } from "test/factories/make-answer-comments";
 import { InMemoryAnswerCommentsRepository } from "test/repositories/in-memory-answer-comments-repository";
-import { FetchAnswerCommentsCase } from "./fetch-answer-comments";
+import { FetchAnswerCommentsUseCase } from "./fetch-answer-comments";
 
 let inMemoryAnswerCommentsRepository: InMemoryAnswerCommentsRepository;
-let sut: FetchAnswerCommentsCase;
+let sut: FetchAnswerCommentsUseCase;
 
 describe("Fetch answer comments", () => {
 	beforeEach(() => {
 		inMemoryAnswerCommentsRepository = new InMemoryAnswerCommentsRepository();
-		sut = new FetchAnswerCommentsCase(inMemoryAnswerCommentsRepository);
+		sut = new FetchAnswerCommentsUseCase(inMemoryAnswerCommentsRepository);
 	});
 
 	it("Should be able to fetch answer comments", async () => {
