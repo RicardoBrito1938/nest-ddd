@@ -15,7 +15,7 @@ type FetchQuestionAnswersUseCaseResponse = Either<
 	}
 >;
 
-Injectable();
+@Injectable()
 export class FetchQuestionAnswersUseCase {
 	constructor(private answersRepository: AnswersRepository) {}
 
