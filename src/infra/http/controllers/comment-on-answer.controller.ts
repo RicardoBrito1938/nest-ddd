@@ -6,6 +6,7 @@ import {
 	BadRequestException,
 	Body,
 	Controller,
+	HttpCode,
 	Param,
 	Post,
 } from "@nestjs/common";
@@ -30,6 +31,7 @@ export class CommentOnAnswerController {
 	) {
 		const { content } = body;
 		const userId = user.sub;
+
 		const result = await this.commentOnAnswer.execute({
 			content,
 			answerId,

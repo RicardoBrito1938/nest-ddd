@@ -19,7 +19,7 @@ type CommentOnAnswerUseCaseResponse = Either<
 	}
 >;
 
-Injectable();
+@Injectable()
 export class CommentOnAnswerUseCase {
 	constructor(
 		private answersRepository: AnswersRepository,
