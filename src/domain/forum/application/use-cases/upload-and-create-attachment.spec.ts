@@ -1,16 +1,16 @@
-import { FakeUploaded } from "test/cryptography/fake-uploader";
+import { FakeUploader } from "test/cryptography/fake-uploader";
 import { InMemoryAttachmentsRepository } from "test/repositories/in-memory-attachments-repository";
 import { InvalidAttachmentTypeError } from "./errors/invalid-attachment-type-error";
 import { UploadAndCreateAttachmentUseCase } from "./upload-and-create-attachment";
 
 let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;
-let fakeUpload: FakeUploaded;
+let fakeUpload: FakeUploader;
 let sut: UploadAndCreateAttachmentUseCase;
 
 describe("Upload and create attachment", () => {
 	beforeEach(() => {
 		inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository();
-		fakeUpload = new FakeUploaded();
+		fakeUpload = new FakeUploader();
 		sut = new UploadAndCreateAttachmentUseCase(
 			inMemoryAttachmentsRepository,
 			fakeUpload,
@@ -21,7 +21,7 @@ describe("Upload and create attachment", () => {
 		const result = await sut.execute({
 			body: Buffer.from("valid_body"),
 			fileName: "valid_file_name",
-			fileType: ".png",
+			fileType: "image/png",
 		});
 		const attachment = inMemoryAttachmentsRepository.items[0];
 

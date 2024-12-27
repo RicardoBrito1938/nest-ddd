@@ -9,7 +9,7 @@ interface Upload {
 	url: string;
 }
 
-export class FakeUploaded implements Uploader {
+export class FakeUploader implements Uploader {
 	private uploads: Upload[] = [];
 
 	async upload(params: UploadParams): Promise<{ url: string }> {

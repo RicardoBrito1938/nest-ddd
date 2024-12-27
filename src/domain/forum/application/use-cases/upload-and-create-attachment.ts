@@ -30,7 +30,11 @@ export class UploadAndCreateAttachmentUseCase {
 		fileName,
 		fileType,
 	}: UploadAndCreateAttachmentUseCaseRequest): Promise<UploadAndCreateAttachmentUseCaseResponse> {
-		if (![".png", ".jpg", ".jpeg", ".pdf"].includes(fileType)) {
+		if (
+			!["image/png", "image/jpg", "image/jpeg", "application/pdf"].includes(
+				fileType,
+			)
+		) {
 			return left(new InvalidAttachmentTypeError(fileName));
 		}
 
