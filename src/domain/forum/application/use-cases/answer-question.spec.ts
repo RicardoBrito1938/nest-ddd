@@ -1,12 +1,13 @@
+import { UniqueEntityId } from "@/core/entities/unique-entity-id";
+import { AnswerQuestionUseCase } from "@/domain/forum/application/use-cases/answer-question";
 import { InMemoryAnswerAttachmentsRepository } from "test/repositories/in-memory-answer-attachment-repository";
 import { InMemoryAnswersRepository } from "test/repositories/in-memory-answers-repository";
-import { AnswerQuestionUseCase } from "./answer-question";
 
 let inMemoryAnswerAttachmentsRepository: InMemoryAnswerAttachmentsRepository;
 let inMemoryAnswersRepository: InMemoryAnswersRepository;
 let sut: AnswerQuestionUseCase;
 
-describe("AnswerQuestionUseCase", () => {
+describe("Create Answer", () => {
 	beforeEach(() => {
 		inMemoryAnswerAttachmentsRepository =
 			new InMemoryAnswerAttachmentsRepository();
@@ -16,43 +17,44 @@ describe("AnswerQuestionUseCase", () => {
 		sut = new AnswerQuestionUseCase(inMemoryAnswersRepository);
 	});
 
-	it("should create an answer", async () => {
+	it("should be able to create a answer", async () => {
 		const result = await sut.execute({
 			questionId: "1",
 			authorId: "1",
-			content: "Answer",
-			attachmentIds: ["1", "2"],
+			content: "New Content",
+			attachmentsIds: ["1", "2"],
 		});
 
-		expect(result.isRight()).toBeTruthy();
-		expect(inMemoryAnswersRepository.items).toHaveLength(1);
+		expect(result.isRight()).toBe(true);
 		expect(inMemoryAnswersRepository.items[0]).toEqual(result.value?.answer);
-		expect(inMemoryAnswersRepository.items[0]).toEqual(result.value?.answer);
-		expect(result.value?.answer.attachments.currentItems).toHaveLength(2);
+		expect(
+			inMemoryAnswersRepository.items[0].attachments.currentItems,
+		).toHaveLength(2);
+		expect(inMemoryAnswersRepository.items[0].attachments.currentItems).toEqual(
+			[
+				expect.objectContaining({ attachmentId: new UniqueEntityId("1") }),
+				expect.objectContaining({ attachmentId: new UniqueEntityId("2") }),
+			],
+		);
 	});
 
-	it("should persist attachment when creating a new answer", async () => {
+	it("should persist attachments when creating a new answer", async () => {
 		const result = await sut.execute({
 			questionId: "1",
 			authorId: "1",
-			content: "Content",
-			attachmentIds: ["1", "2"],
+			content: "Answer Content",
+			attachmentsIds: ["1", "2"],
 		});
 
-		expect(result.isRight()).toBeTruthy();
+		expect(result.isRight()).toBe(true);
 		expect(inMemoryAnswerAttachmentsRepository.items).toHaveLength(2);
-		expect(inMemoryAnswerAttachmentsRepository.items).toEqual(
-			result.value?.answer.attachments.currentItems,
-		);
 		expect(inMemoryAnswerAttachmentsRepository.items).toEqual(
 			expect.arrayContaining([
 				expect.objectContaining({
-					attachmentId:
-						result.value?.answer.attachments.currentItems[0].attachmentId,
+					attachmentId: new UniqueEntityId("1"),
 				}),
 				expect.objectContaining({
-					attachmentId:
-						result.value?.answer.attachments.currentItems[1].attachmentId,
+					attachmentId: new UniqueEntityId("1"),
 				}),
 			]),
 		);

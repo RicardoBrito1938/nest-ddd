@@ -33,7 +33,7 @@ export class AnswerQuestionController {
 		const { sub: userId } = user;
 
 		const result = await this.answerQuestion.execute({
-			attachmentIds: [],
+			attachmentsIds: [],
 			content,
 			authorId: userId,
 			questionId,

@@ -9,8 +9,8 @@ import { AnswersRepository } from "../repositories/answers-repository";
 interface AnswerQuestionUseCaseRequest {
 	authorId: string;
 	questionId: string;
+	attachmentsIds: string[];
 	content: string;
-	attachmentIds: string[];
 }
 
 type AnswerQuestionUseCaseResponse = Either<
@@ -28,7 +28,7 @@ export class AnswerQuestionUseCase {
 		authorId,
 		questionId,
 		content,
-		attachmentIds,
+		attachmentsIds,
 	}: AnswerQuestionUseCaseRequest): Promise<AnswerQuestionUseCaseResponse> {
 		const answer = Answer.create({
 			content,
@@ -36,9 +36,7 @@ export class AnswerQuestionUseCase {
 			questionId: new UniqueEntityId(questionId),
 		});
 
-		await this.answersRepository.create(answer);
-
-		const answerAttachments = attachmentIds.map((attachmentId) => {
+		const answerAttachments = attachmentsIds.map((attachmentId) => {
 			return AnswerAttachment.create({
 				attachmentId: new UniqueEntityId(attachmentId),
 				answerId: answer.id,
@@ -46,6 +44,8 @@ export class AnswerQuestionUseCase {
 		});
 
 		answer.attachments = new AnswerAttachmentList(answerAttachments);
+
+		await this.answersRepository.create(answer);
 
 		return right({
 			answer,
