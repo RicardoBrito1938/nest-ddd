@@ -1,7 +1,7 @@
+import { DomainEvents } from "@/core/events/domain-events";
+import type { QuestionAttachmentsRepository } from "@/domain/forum/application/repositories/question-attachments-repository";
 import type { QuestionsRepository } from "@/domain/forum/application/repositories/questions-repository";
 import type { Question } from "@/domain/forum/enterprise/entities/question";
-import type { QuestionAttachmentsRepository } from "@/domain/forum/application/repositories/question-attachments-repository";
-import { DomainEvents } from "@/core/events/domain-events";
 
 export class InMemoryQuestionsRepository implements QuestionsRepository {
 	public items: Question[] = [];
@@ -12,6 +12,10 @@ export class InMemoryQuestionsRepository implements QuestionsRepository {
 
 	async create(question: Question): Promise<void> {
 		this.items.push(question);
+
+		await this.questionAttachmentsRepository.createMany(
+			question.attachments.getItems(),
+		);
 
 		DomainEvents.dispatchEventsForAggregate(question.id);
 
@@ -50,6 +54,14 @@ export class InMemoryQuestionsRepository implements QuestionsRepository {
 
 	async update(question: Question) {
 		const itemIndex = this.items.findIndex((item) => item.id === question.id);
+
+		await this.questionAttachmentsRepository.createMany(
+			question.attachments.getNewItems(),
+		);
+
+		await this.questionAttachmentsRepository.deleteMany(
+			question.attachments.getRemovedItems(),
+		);
 
 		this.items[itemIndex] = question;
 

@@ -1,6 +1,6 @@
 import { InMemoryQuestionAttachmentsRepository } from "test/repositories/in-memory-question-attachments-repository";
-import { CreateQuestionUseCase } from "./create-question";
 import { InMemoryQuestionsRepository } from "test/repositories/in-memory-questions-repository";
+import { CreateQuestionUseCase } from "./create-question";
 
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository;
 let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentsRepository;
@@ -19,8 +19,8 @@ describe("Create question", () => {
 	it("create a question", async () => {
 		const result = await sut.execute({
 			authorId: "1",
-			title: "Nova pergunta",
-			content: "Conteúdo da pergunta",
+			title: "New question",
+			content: "Content",
 			attachmentsIds: ["1", "2"],
 		});
 
@@ -30,5 +30,34 @@ describe("Create question", () => {
 			result.value?.question,
 		);
 		expect(result.value?.question.attachments.currentItems).toHaveLength(2);
+	});
+
+	it("should persist attachment when creating a new question", async () => {
+		const result = await sut.execute({
+			authorId: "1",
+			title: "New question",
+			content: "Content",
+			attachmentsIds: ["1", "2"],
+		});
+
+		expect(result.isRight()).toBeTruthy();
+		expect(inMemoryQuestionAttachmentsRepository.items).toHaveLength(2);
+		expect(inMemoryQuestionAttachmentsRepository.items).toEqual(
+			result.value?.question.attachments.currentItems,
+		);
+		expect(inMemoryQuestionAttachmentsRepository.items).toEqual(
+			expect.arrayContaining([
+				expect.objectContaining({
+					attachmentId:
+						result.value?.question.attachments.currentItems[0].attachmentId,
+					questionId: result.value?.question.id,
+				}),
+				expect.objectContaining({
+					attachmentId:
+						result.value?.question.attachments.currentItems[1].attachmentId,
+					questionId: result.value?.question.id,
+				}),
+			]),
+		);
 	});
 });
