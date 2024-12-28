@@ -13,6 +13,7 @@ import { z } from "zod";
 
 const answerQuestionBodySchema = z.object({
 	content: z.string(),
+	attachments: z.array(z.string()),
 });
 
 type AnswerQuestionBodySchema = z.infer<typeof answerQuestionBodySchema>;
@@ -29,11 +30,11 @@ export class AnswerQuestionController {
 		@Body(bodyValidationPipe) body: AnswerQuestionBodySchema,
 		@Param("questionId") questionId: string,
 	) {
-		const { content } = body;
+		const { content, attachments } = body;
 		const { sub: userId } = user;
 
 		const result = await this.answerQuestion.execute({
-			attachmentsIds: [],
+			attachmentsIds: attachments,
 			content,
 			authorId: userId,
 			questionId,
