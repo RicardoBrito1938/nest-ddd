@@ -40,7 +40,7 @@ export class EditQuestionController {
 			title,
 			content,
 			authorId: userId,
-			attachmentIds,
+			attachmentsIds: attachmentIds,
 			questionId,
 		});
 

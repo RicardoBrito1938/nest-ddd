@@ -1,12 +1,12 @@
 import { Either, left, right } from "@/core/either";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
+import { NotAllowedError } from "@/core/errors/errors/not-allowed-error";
+import { ResourceNotFoundError } from "@/core/errors/errors/resource-not-found-error";
+import { QuestionAttachmentsRepository } from "@/domain/forum/application/repositories/question-attachments-repository";
+import { Question } from "@/domain/forum/enterprise/entities/question";
+import { QuestionAttachment } from "@/domain/forum/enterprise/entities/question-attachment";
+import { QuestionAttachmentList } from "@/domain/forum/enterprise/entities/question-attachment-list";
 import { Injectable } from "@nestjs/common";
-import { NotAllowedError } from "../../../../core/errors/errors/not-allowed-error";
-import { ResourceNotFoundError } from "../../../../core/errors/errors/resource-not-found-error";
-import { Question } from "../../enterprise/entities/question";
-import { QuestionAttachment } from "../../enterprise/entities/question-attachment";
-import { QuestionAttachmentList } from "../../enterprise/entities/question-attachment-list";
-import { QuestionAttachmentsRepository } from "../repositories/question-attachments-repository";
 import { QuestionsRepository } from "../repositories/questions-repository";
 
 interface EditQuestionUseCaseRequest {
@@ -14,11 +14,11 @@ interface EditQuestionUseCaseRequest {
 	questionId: string;
 	title: string;
 	content: string;
-	attachmentIds: string[];
+	attachmentsIds: string[];
 }
 
 type EditQuestionUseCaseResponse = Either<
-	NotAllowedError | ResourceNotFoundError,
+	ResourceNotFoundError | NotAllowedError,
 	{
 		question: Question;
 	}
@@ -36,7 +36,7 @@ export class EditQuestionUseCase {
 		questionId,
 		title,
 		content,
-		attachmentIds,
+		attachmentsIds,
 	}: EditQuestionUseCaseRequest): Promise<EditQuestionUseCaseResponse> {
 		const question = await this.questionsRepository.findById(questionId);
 
@@ -48,11 +48,14 @@ export class EditQuestionUseCase {
 			return left(new NotAllowedError());
 		}
 
-		const attachments =
+		const currentQuestionAttachments =
 			await this.questionAttachmentsRepository.findManyByQuestionId(questionId);
-		const questionAttachmentList = new QuestionAttachmentList(attachments);
 
-		const questionAttachments = attachmentIds.map((attachmentId) => {
+		const questionAttachmentList = new QuestionAttachmentList(
+			currentQuestionAttachments,
+		);
+
+		const questionAttachments = attachmentsIds.map((attachmentId) => {
 			return QuestionAttachment.create({
 				attachmentId: new UniqueEntityId(attachmentId),
 				questionId: question.id,

@@ -1,9 +1,9 @@
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
+import { NotAllowedError } from "@/core/errors/errors/not-allowed-error";
 import { makeQuestion } from "test/factories/make-question";
 import { makeQuestionAttachment } from "test/factories/make-question-attachments";
 import { InMemoryQuestionAttachmentsRepository } from "test/repositories/in-memory-question-attachments-repository";
 import { InMemoryQuestionsRepository } from "test/repositories/in-memory-questions-repository";
-import { NotAllowedError } from "../../../../core/errors/errors/not-allowed-error";
 import { EditQuestionUseCase } from "./edit-question";
 
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository;
@@ -48,24 +48,24 @@ describe("Edit Question", () => {
 		await sut.execute({
 			questionId: newQuestion.id.toValue(),
 			authorId: "author-1",
-			title: "New title",
-			content: "New content",
-			attachmentIds: ["1", "3"],
+			title: "Question title",
+			content: "Question content",
+			attachmentsIds: ["1", "3"],
 		});
 
 		expect(inMemoryQuestionsRepository.items[0]).toMatchObject({
-			title: "New title",
-			content: "New content",
+			title: "Question title",
+			content: "Question content",
 		});
+
+		expect(
+			inMemoryQuestionsRepository.items[0].attachments.currentItems,
+		).toHaveLength(2);
 		expect(
 			inMemoryQuestionsRepository.items[0].attachments.currentItems,
 		).toEqual([
-			expect.objectContaining({
-				attachmentId: new UniqueEntityId("1"),
-			}),
-			expect.objectContaining({
-				attachmentId: new UniqueEntityId("3"),
-			}),
+			expect.objectContaining({ attachmentId: new UniqueEntityId("1") }),
+			expect.objectContaining({ attachmentId: new UniqueEntityId("3") }),
 		]);
 	});
 
@@ -82,15 +82,16 @@ describe("Edit Question", () => {
 		const result = await sut.execute({
 			questionId: newQuestion.id.toValue(),
 			authorId: "author-2",
-			title: "Pergunta teste",
-			content: "Conteúdo teste",
-			attachmentIds: [],
+			title: "Question title",
+			content: "Question content",
+			attachmentsIds: [],
 		});
-		expect(result.isLeft()).toBeTruthy();
+
+		expect(result.isLeft()).toBe(true);
 		expect(result.value).toBeInstanceOf(NotAllowedError);
 	});
 
-	it("should sync new and remove attachment when editing a question", async () => {
+	it("should sync new and removed attachment when editing a question", async () => {
 		const newQuestion = makeQuestion(
 			{
 				authorId: new UniqueEntityId("author-1"),
@@ -114,12 +115,12 @@ describe("Edit Question", () => {
 		const result = await sut.execute({
 			questionId: newQuestion.id.toValue(),
 			authorId: "author-1",
-			title: "New title",
-			content: "New content",
-			attachmentIds: ["1", "3"],
+			title: "Question title",
+			content: "Question content",
+			attachmentsIds: ["1", "3"],
 		});
 
-		expect(result.isRight()).toBeTruthy();
+		expect(result.isRight()).toBe(true);
 		expect(inMemoryQuestionAttachmentsRepository.items).toHaveLength(2);
 		expect(inMemoryQuestionAttachmentsRepository.items).toEqual(
 			expect.arrayContaining([
