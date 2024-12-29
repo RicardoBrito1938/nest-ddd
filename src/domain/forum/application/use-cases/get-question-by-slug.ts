@@ -1,6 +1,6 @@
 import { type Either, right } from "@/core/either";
-import { Question } from "@/domain/forum/enterprise/entities/question";
 import { Injectable } from "@nestjs/common";
+import { QuestionDetails } from "../../enterprise/entities/value-objects/question-details";
 import { QuestionsRepository } from "../repositories/questions-repository";
 
 interface GetQuestionBySlugUseCaseRequest {
@@ -10,7 +10,7 @@ interface GetQuestionBySlugUseCaseRequest {
 type GetQuestionBySlugUseCaseResponse = Either<
 	null,
 	{
-		question: Question;
+		question: QuestionDetails;
 	}
 >;
 
@@ -21,7 +21,7 @@ export class GetQuestionBySlugUseCase {
 	async execute({
 		slug,
 	}: GetQuestionBySlugUseCaseRequest): Promise<GetQuestionBySlugUseCaseResponse> {
-		const question = await this.questionsRepository.getBySlug(slug);
+		const question = await this.questionsRepository.getBySlugWithDetails(slug);
 
 		if (!question) {
 			throw new Error("Question not found");
