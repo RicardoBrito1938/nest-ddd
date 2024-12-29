@@ -8,7 +8,7 @@ import {
 	Query,
 } from "@nestjs/common";
 import { z } from "zod";
-import { HttpCommentPresenter } from "../presenters/http-comment-presenter";
+import { HttpCommentWithAuthorPresenter } from "../presenters/http-comment-with-author-presenter";
 
 const pageQueryParamSchema = z
 	.string()
@@ -31,10 +31,14 @@ export class FetchAnswerCommentsController {
 			page,
 			answerId,
 		});
+
 		if (result.isLeft()) {
 			throw new BadRequestException();
 		}
-		const answerComments = result.value.answerComment;
-		return { comments: answerComments.map(HttpCommentPresenter.toHTTP) };
+
+		const answerComments = result.value.comments;
+		return {
+			comments: answerComments.map(HttpCommentWithAuthorPresenter.toHTTP),
+		};
 	}
 }
