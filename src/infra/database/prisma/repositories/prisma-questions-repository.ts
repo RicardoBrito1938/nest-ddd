@@ -79,7 +79,9 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
 		);
 
 		if (cachedQuestionDetails) {
-			return JSON.parse(cachedQuestionDetails);
+			const cacheData = JSON.parse(cachedQuestionDetails);
+
+			return PrismaQuestionDetailsMapper.toDomain(cacheData);
 		}
 
 		const question = await this.prisma.question.findUnique({
@@ -96,12 +98,12 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
 			return null;
 		}
 
-		const questionDetails = PrismaQuestionDetailsMapper.toDomain(question);
-
 		await this.cacheRepository.set(
 			`question:${slug}:details`,
-			JSON.stringify(questionDetails),
+			JSON.stringify(question),
 		);
+
+		const questionDetails = PrismaQuestionDetailsMapper.toDomain(question);
 
 		return questionDetails;
 	}
