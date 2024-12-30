@@ -1,4 +1,3 @@
-import { DomainEvents } from "@/core/events/domain-events";
 import { AppModule } from "@/infra/app.module";
 import { DatabaseModule } from "@/infra/database/database.module";
 import { PrismaService } from "@/infra/database/prisma/prisma.service";
@@ -9,9 +8,8 @@ import request from "supertest";
 import { AnswerFactory } from "test/factories/make-answer";
 import { QuestionFactory } from "test/factories/make-question";
 import { StudentFactory } from "test/factories/make-student";
-import { waitFor } from "test/utils/wait-for";
 
-describe("On question best answer chosen (E2E)", () => {
+describe("Choose question best answer (E2E)", () => {
 	let app: INestApplication;
 	let prisma: PrismaService;
 	let studentFactory: StudentFactory;
@@ -33,12 +31,10 @@ describe("On question best answer chosen (E2E)", () => {
 		answerFactory = moduleRef.get(AnswerFactory);
 		jwt = moduleRef.get(JwtService);
 
-		DomainEvents.shouldRun = true;
-
 		await app.init();
 	});
 
-	it("should send a notification when question best answer is chosen", async () => {
+	test("[PATCH] /answers/:answerId/choose-as-best", async () => {
 		const user = await studentFactory.makePrismaStudent();
 
 		const accessToken = jwt.sign({ sub: user.id.toString() });
@@ -59,18 +55,14 @@ describe("On question best answer chosen (E2E)", () => {
 			.set("Authorization", `Bearer ${accessToken}`)
 			.send();
 
-		console.log(response.body);
+		expect(response.statusCode).toBe(204);
 
-		await waitFor(async () => {
-			const notificationOnDatabase = await prisma.notification.findFirst({
-				where: {
-					recipientId: user.id.toString(),
-				},
-			});
-
-			console.log(notificationOnDatabase);
-
-			// expect(notificationOnDatabase).not.toBeNull();
+		const questionOnDatabase = await prisma.question.findUnique({
+			where: {
+				id: question.id.toString(),
+			},
 		});
+
+		expect(questionOnDatabase?.bestAnswerId).toEqual(answerId);
 	});
 });
