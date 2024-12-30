@@ -1,7 +1,7 @@
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import {
 	Question,
-	type QuestionProps,
+	QuestionProps,
 } from "@/domain/forum/enterprise/entities/question";
 import { PrismaQuestionMapper } from "@/infra/database/prisma/mappers/prisma-question-mapper";
 import { PrismaService } from "@/infra/database/prisma/prisma.service";

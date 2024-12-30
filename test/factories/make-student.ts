@@ -1,7 +1,7 @@
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import {
 	Student,
-	type StudentProps,
+	StudentProps,
 } from "@/domain/forum/enterprise/entities/student";
 import { PrismaStudentMapper } from "@/infra/database/prisma/mappers/prisma-student-mapper";
 import { PrismaService } from "@/infra/database/prisma/prisma.service";
