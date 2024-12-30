@@ -1,6 +1,6 @@
+import { makeNotification } from "test/factories/make-notification";
 import { InMemoryNotificationsRepository } from "test/repositories/in-memory-notifications-repository";
 import { ReadNotificationUseCase } from "./read-notification";
-import { makeNotification } from "test/factories/make-notifications";
 
 let inMemoryNotificationsRepository: InMemoryNotificationsRepository;
 let sut: ReadNotificationUseCase;
