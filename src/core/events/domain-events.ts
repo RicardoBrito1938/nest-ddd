@@ -9,18 +9,22 @@ export class DomainEvents {
 	private static handlersMap: Record<string, DomainEventCallback[]> = {};
 	private static markedAggregates: AggregateRoot<unknown>[] = [];
 
+	public static shouldRun = true;
+
 	public static markAggregateForDispatch(aggregate: AggregateRoot<unknown>) {
 		const aggregateFound = !!DomainEvents.findMarkedAggregateByID(aggregate.id);
 		if (!aggregateFound) {
 			DomainEvents.markedAggregates.push(aggregate);
 		}
 	}
+
 	private static dispatchAggregateEvents(aggregate: AggregateRoot<unknown>) {
 		// biome-ignore lint/complexity/noForEach: <explanation>
 		aggregate.domainEvents.forEach((event: DomainEvent) =>
 			DomainEvents.dispatch(event),
 		);
 	}
+
 	private static removeAggregateFromMarkedDispatchList(
 		aggregate: AggregateRoot<unknown>,
 	) {
@@ -29,6 +33,7 @@ export class DomainEvents {
 		);
 		DomainEvents.markedAggregates.splice(index, 1);
 	}
+
 	private static findMarkedAggregateByID(
 		id: UniqueEntityId,
 	): AggregateRoot<unknown> | undefined {
@@ -36,6 +41,7 @@ export class DomainEvents {
 			aggregate.id.equals(id),
 		);
 	}
+
 	public static dispatchEventsForAggregate(id: UniqueEntityId) {
 		const aggregate = DomainEvents.findMarkedAggregateByID(id);
 		if (aggregate) {
@@ -44,6 +50,7 @@ export class DomainEvents {
 			DomainEvents.removeAggregateFromMarkedDispatchList(aggregate);
 		}
 	}
+
 	public static register(
 		callback: DomainEventCallback,
 		eventClassName: string,
@@ -54,15 +61,24 @@ export class DomainEvents {
 		}
 		DomainEvents.handlersMap[eventClassName].push(callback);
 	}
+
 	public static clearHandlers() {
 		DomainEvents.handlersMap = {};
 	}
+
 	public static clearMarkedAggregates() {
 		DomainEvents.markedAggregates = [];
 	}
+
 	private static dispatch(event: DomainEvent) {
 		const eventClassName: string = event.constructor.name;
 		const isEventRegistered = eventClassName in DomainEvents.handlersMap;
+
+		// biome-ignore lint/complexity/noThisInStatic: <explanation>
+		if (!this.shouldRun) {
+			return;
+		}
+
 		if (isEventRegistered) {
 			const handlers = DomainEvents.handlersMap[eventClassName];
 			for (const handler of handlers) {
