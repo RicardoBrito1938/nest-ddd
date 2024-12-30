@@ -1,4 +1,4 @@
-import { type Either, right } from "@/core/either";
+import { Either, right } from "@/core/either";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { Injectable } from "@nestjs/common";
 import { Notification } from "../../enterprise/entities/notification";
